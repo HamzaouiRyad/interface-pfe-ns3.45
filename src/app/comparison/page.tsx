@@ -1,30 +1,33 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Cloud, BarChart3 } from 'lucide-react';
-import ThroughputChart from '@/components/comparison/ThroughputChart';
-import RSRPChart from '@/components/comparison/RSRPChart';
-import LatencyChart from '@/components/comparison/LatencyChart';
-import SINRChart from '@/components/comparison/SINRChart';
-import PacketLossChart from '@/components/comparison/PacketLossChart';
-import PowerConversionSection from '@/components/comparison/PowerConversionSection';
+import React, { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Cloud, BarChart3 } from "lucide-react";
+import ThroughputChart from "@/components/comparison/ThroughputChart";
+import RSRPChart from "@/components/comparison/RSRPChart";
+import LatencyChart from "@/components/comparison/LatencyChart";
+import SINRChart from "@/components/comparison/SINRChart";
+import PacketLossChart from "@/components/comparison/PacketLossChart";
+import PowerConversionSection from "@/components/comparison/PowerConversionSection";
 
 // Type definitions for CSV data
 interface CSVData {
-  time?: number;
-  distance?: number;
-  throughput_4g?: number;
-  throughput_5g?: number;
-  rsrp_4g?: number;
-  rsrp_5g?: number;
-  latency_4g?: number;
-  latency_5g?: number;
-  sinr_4g?: number;
-  sinr_5g?: number;
-  packet_loss_4g?: number;
-  packet_loss_5g?: number;
+  time_s?: number;
+
+  throughput_dl_mbps?: number;
+  throughput_ul_mbps?: number;
+
+  latence_ms?: number;
+  jitter_ms?: number;
+
+  sinr_db?: number;
+
+  rsrp_dbm?: number;
+
+  perte_dl_pct?: number;
+
+  handovers_cumul?: number;
 }
 
 export default function ComparisonPage() {
@@ -34,20 +37,22 @@ export default function ComparisonPage() {
 
   // CSV Parser function
   const parseCSV = (csvText: string): CSVData[] => {
-    const lines = csvText.trim().split('\n');
+    const lines = csvText.trim().split("\n");
     if (lines.length < 2) return [];
 
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const headers = lines[0].split(",").map((h) => h.trim().toLowerCase());
     const data: CSVData[] = [];
 
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',');
+      const values = lines[i].split(",");
       const row: CSVData = {};
 
       headers.forEach((header, index) => {
         const value = values[index]?.trim();
-        if (value && !isNaN(Number(value))) {
-          row[header as keyof CSVData] = Number(value) as any;
+        const num = Number(value);
+
+        if (!isNaN(num)) {
+          (row as any)[header] = num;
         }
       });
 
@@ -59,7 +64,7 @@ export default function ComparisonPage() {
 
   const handleFileUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
-    is5G: boolean
+    is5G: boolean,
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -184,26 +189,33 @@ export default function ComparisonPage() {
             <h2 className="text-2xl font-bold text-white mb-6">
               Graphe 1 : Débit (Throughput) en fonction du Temps
             </h2>
-            <ThroughputChart />
+            <ThroughputChart
+              csvData4G={csvData4G || []}
+              csvData5G={csvData5G || []}
+            />
           </Card>
-
+          {/* RSRP Chart */}
+          <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm p-8">
+            <h2 className="text-2xl font-bold text-white mb-2">
+              Graphe 2 : RSRP en fonction du Temps
+            </h2>
+            <p className="text-gray-400 mb-6">
+              Comparaison du RSRP entre le réseau 4G LTE et le réseau 5G NR
+            </p>
+            <RSRPChart
+              csvData4G={csvData4G || []}
+              csvData5G={csvData5G || []}
+            />{" "}
+          </Card>
           {/* Latency Chart */}
           <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm p-8">
             <h2 className="text-2xl font-bold text-white mb-6">
               Graphe 3 : Latence / TTI vs Distance
             </h2>
-            <LatencyChart />
-          </Card>
-
-          {/* RSRP Chart */}
-          <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm p-8">
-            <h2 className="text-2xl font-bold text-white mb-2">
-              Graphe 2 : RSRP vs Distance
-            </h2>
-            <p className="text-gray-400 mb-6">
-              Évolution du RSRP pour 3 Équipements Utilisateurs (UE)
-            </p>
-            <RSRPChart />
+            <LatencyChart
+              csvData4G={csvData4G || []}
+              csvData5G={csvData5G || []}
+            />
           </Card>
 
           {/* Power Conversion Section */}
@@ -211,7 +223,10 @@ export default function ComparisonPage() {
             <h2 className="text-2xl font-bold text-white mb-6">
               Section 4 : Conversion de Puissance (Formule & Graphique)
             </h2>
-            <PowerConversionSection />
+            <PowerConversionSection
+              data4G={csvData4G || []}
+              data5G={csvData5G || []}
+            />{" "}
           </Card>
 
           {/* SINR Chart */}
@@ -219,7 +234,10 @@ export default function ComparisonPage() {
             <h2 className="text-2xl font-bold text-white mb-6">
               Graphe 4 : SINR en fonction du Temps / Distance
             </h2>
-            <SINRChart />
+            <SINRChart
+              csvData4G={csvData4G || []}
+              csvData5G={csvData5G || []}
+            />{" "}
           </Card>
 
           {/* Packet Loss Chart */}
@@ -227,7 +245,10 @@ export default function ComparisonPage() {
             <h2 className="text-2xl font-bold text-white mb-6">
               Graphe 5 : Taux de perte de paquets par scénario
             </h2>
-            <PacketLossChart />
+            <PacketLossChart
+              csvData4G={csvData4G || []}
+              csvData5G={csvData5G || []}
+            />
           </Card>
         </section>
       )}

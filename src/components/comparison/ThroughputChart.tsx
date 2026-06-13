@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   LineChart,
   Line,
@@ -12,67 +12,119 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const ThroughputChart: React.FC = () => {
-  const data = [
-    { time: 0, '4G LTE': 5, '5G NR': 8 },
-    { time: 10, '4G LTE': 15, '5G NR': 35 },
-    { time: 20, '4G LTE': 28, '5G NR': 75 },
-    { time: 30, '4G LTE': 38, '5G NR': 105 },
-    { time: 40, '4G LTE': 48, '5G NR': 112 },
-    { time: 50, '4G LTE': 50, '5G NR': 110 },
-  ];
+interface CSVData {
+  time_s?: number;
+  throughput_dl_mbps?: number;
+}
+
+interface Props {
+  csvData4G: CSVData[];
+  csvData5G: CSVData[];
+}
+
+const ThroughputChart: React.FC<Props> = ({
+  csvData4G,
+  csvData5G,
+}) => {
+
+  const data = useMemo(() => {
+
+    const len = Math.max(csvData4G.length, csvData5G.length);
+
+    return Array.from({ length: len }, (_, i) => ({
+      time: csvData4G[i]?.time_s ?? csvData5G[i]?.time_s,
+
+      '4G LTE':
+        csvData4G[i]?.throughput_dl_mbps,
+
+      '5G NR':
+        csvData5G[i]?.throughput_dl_mbps,
+    }));
+
+  }, [csvData4G, csvData5G]);
+
+  if (!data.length) {
+    return (
+      <div className="h-96 flex items-center justify-center text-gray-400">
+        Aucun fichier chargé
+      </div>
+    );
+  }
 
   return (
+
     <div className="w-full h-96">
+
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+
+        <LineChart
+          data={data}
+          margin={{
+            top: 10,
+            right: 30,
+            left: 10,
+            bottom: 10,
+          }}
+        >
+
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#374151"
+          />
+
           <XAxis
             dataKey="time"
-            label={{ value: 'Temps (s)', position: 'insideBottomRight', offset: -10 }}
-            domain={[0, 50]}
-            ticks={[0, 10, 20, 30, 40, 50]}
             stroke="#9CA3AF"
+            label={{
+              value: 'Temps (s)',
+              position: 'insideBottom',
+              offset: -5,
+            }}
           />
+
           <YAxis
-            label={{ value: 'Débit (Mbps)', angle: -90, position: 'insideLeft' }}
-            domain={[0, 120]}
-            ticks={[0, 20, 40, 60, 80, 100, 120]}
             stroke="#9CA3AF"
+            label={{
+              value: 'Débit DL (Mbps)',
+              angle: -90,
+              position: 'insideLeft',
+            }}
           />
+
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1F2937',
-              border: '1px solid #4B5563',
-              borderRadius: '8px',
-              color: '#E5E7EB',
+              backgroundColor: '#1E293B',
+              border: '1px solid #475569',
+              borderRadius: '10px',
             }}
-            cursor={{ stroke: '#6366F1', strokeWidth: 2 }}
           />
-          <Legend
-            wrapperStyle={{ paddingTop: '20px', color: '#E5E7EB' }}
-          />
+
+          <Legend />
+
           <Line
             type="monotone"
             dataKey="4G LTE"
             stroke="#EF4444"
             strokeWidth={3}
-            dot={{ fill: '#FCA5A5', r: 5 }}
-            activeDot={{ r: 7 }}
-            name="4G LTE"
+            dot={false}
+            activeDot={{ r: 6 }}
           />
+
           <Line
             type="monotone"
             dataKey="5G NR"
             stroke="#0EA5E9"
             strokeWidth={3}
-            dot={{ fill: '#38BDF8', r: 5 }}
-            activeDot={{ r: 7 }}
-            name="5G NR"
+            dot={false}
+            activeDot={{ r: 6 }}
           />
+
         </LineChart>
+
       </ResponsiveContainer>
+
     </div>
+
   );
 };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   LineChart,
   Line,
@@ -12,92 +12,79 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const PowerConversionSection: React.FC = () => {
-  // Data for the conversion table
-  const conversionTableData = [
-    { powerMW: 0.001, powerDBm: -30.0 },
-    { powerMW: 0.01, powerDBm: -20.0 },
-    { powerMW: 0.1, powerDBm: -10.0 },
-    { powerMW: 1.0, powerDBm: 0.0 },
-    { powerMW: 100.0, powerDBm: 20.0 },
-  ];
+type CSVData = {
+  time_s?: number;
+  throughput_dl_mbps?: number;
+  sinr_db?: number;
+};
 
-  // Data for the conversion curve
-  const curveData = [
-    { powerMW: 1, power4G: -10, power5G: -8 },
-    { powerMW: 10, power4G: 0, power5G: 2 },
-    { powerMW: 100, power4G: 10, power5G: 12 },
-    { powerMW: 500, power4G: 17, power5G: 19 },
-    { powerMW: 1000, power4G: 20, power5G: 22 },
-  ];
+interface Props {
+  data4G: CSVData[];
+  data5G: CSVData[];
+}
+
+const PowerConversionSection: React.FC<Props> = ({ data4G, data5G }) => {
+  // Convert SINR → pseudo power (log-like mapping for visualization)
+  const chartData = useMemo(() => {
+    const maxLen = Math.max(data4G.length, data5G.length);
+
+    return Array.from({ length: maxLen }).map((_, i) => {
+      const d4 = data4G[i];
+      const d5 = data5G[i];
+
+      const sinrToPower = (sinr?: number) =>
+        sinr !== undefined ? 10 * Math.log10(Math.max(sinr, 0.1)) : null;
+
+      return {
+        time: d5?.time_s ?? d4?.time_s ?? i * 0.1,
+
+        power4G: sinrToPower(d4?.sinr_db),
+        power5G: sinrToPower(d5?.sinr_db),
+      };
+    });
+  }, [data4G, data5G]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {/* Left Column: Formula & Table */}
+
+      {/* LEFT: FORMULA */}
       <div className="space-y-6">
-        {/* Formula Box */}
-        <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 border border-blue-500/30 rounded-lg p-6 backdrop-blur-sm">
-          <h3 className="text-lg font-semibold text-white mb-4">Formule de Conversion</h3>
+        <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 border border-blue-500/30 rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-white mb-4">
+            Conversion SINR → dB (visualisation)
+          </h3>
+
           <div className="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
             <p className="text-center text-xl text-cyan-300 font-mono">
-              P(dBm) = 10 × log<sub>10</sub>(P_mW)
+              P(dB) = 10 × log<sub>10</sub>(SINR)
             </p>
           </div>
-        </div>
 
-        {/* Conversion Table */}
-        <div className="bg-slate-800/30 border border-slate-700 rounded-lg overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gradient-to-r from-blue-900/60 to-cyan-900/60 border-b border-slate-700">
-                <th className="px-6 py-3 text-left text-sm font-semibold text-blue-300">
-                  P (mW)
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-cyan-300">
-                  P (dBm)
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {conversionTableData.map((row, idx) => (
-                <tr
-                  key={idx}
-                  className={`border-b border-slate-700/50 ${
-                    idx % 2 === 0 ? 'bg-slate-800/20' : 'bg-slate-800/40'
-                  } hover:bg-slate-700/30 transition-colors`}
-                >
-                  <td className="px-6 py-3 text-sm text-gray-300">
-                    {Number.isInteger(row.powerMW) ? row.powerMW : row.powerMW.toFixed(3)}
-                  </td>
-                  <td className="px-6 py-3 text-sm text-gray-300 font-mono">
-                    {row.powerDBm.toFixed(2)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <p className="text-gray-400 text-sm mt-4">
+            Cette transformation est utilisée uniquement pour comparer visuellement 4G vs 5G.
+          </p>
         </div>
       </div>
 
-      {/* Right Column: Conversion Curve */}
+      {/* RIGHT: CHART */}
       <div>
-        <h3 className="text-lg font-semibold text-white mb-4">Courbe de Conversion Logarithmique</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Comparaison puissance (dérivée SINR)
+        </h3>
+
         <div className="w-full h-96">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={curveData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+            <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+
               <XAxis
-                dataKey="powerMW"
-                scale="log"
-                label={{ value: 'Puissance (mW)', position: 'insideBottomRight', offset: -10 }}
+                dataKey="time"
                 stroke="#9CA3AF"
+                label={{ value: 'Temps (s)', position: 'insideBottomRight', offset: -5 }}
               />
-              <YAxis
-                label={{ value: 'P(dBm)', angle: -90, position: 'insideLeft' }}
-                domain={[-30, 30]}
-                ticks={[-30, -20, -10, 0, 10, 20, 30]}
-                stroke="#9CA3AF"
-              />
+
+              <YAxis stroke="#9CA3AF" />
+
               <Tooltip
                 contentStyle={{
                   backgroundColor: '#1F2937',
@@ -105,29 +92,26 @@ const PowerConversionSection: React.FC = () => {
                   borderRadius: '8px',
                   color: '#E5E7EB',
                 }}
-                formatter={(value) => `${Number(value).toFixed(1)} dBm`}
-                cursor={{ stroke: '#6366F1', strokeWidth: 2 }}
               />
-              <Legend
-                wrapperStyle={{ paddingTop: '20px', color: '#E5E7EB' }}
-              />
+
+              <Legend />
+
               <Line
                 type="monotone"
                 dataKey="power4G"
                 stroke="#EF4444"
-                strokeWidth={3}
-                dot={{ fill: '#FCA5A5', r: 5 }}
-                activeDot={{ r: 7 }}
-                name="Tendance conversion 4G"
+                strokeWidth={2}
+                dot={false}
+                name="4G (SINR→dB)"
               />
+
               <Line
                 type="monotone"
                 dataKey="power5G"
                 stroke="#0EA5E9"
-                strokeWidth={3}
-                dot={{ fill: '#38BDF8', r: 5 }}
-                activeDot={{ r: 7 }}
-                name="Tendance conversion 5G"
+                strokeWidth={2}
+                dot={false}
+                name="5G (SINR→dB)"
               />
             </LineChart>
           </ResponsiveContainer>

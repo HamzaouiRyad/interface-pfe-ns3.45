@@ -12,72 +12,112 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const RSRPChart: React.FC = () => {
-  const data = [
-    { distance: 100, 'UE 1 - 4G': -85, 'UE 2 - 5G': -90, 'UE 3 - 5G': -95 },
-    { distance: 200, 'UE 1 - 4G': -95, 'UE 2 - 5G': -100, 'UE 3 - 5G': -110 },
-    { distance: 300, 'UE 1 - 4G': -105, 'UE 2 - 5G': -108, 'UE 3 - 5G': -120 },
-    { distance: 400, 'UE 1 - 4G': -115, 'UE 2 - 5G': -118, 'UE 3 - 5G': -128 },
-    { distance: 500, 'UE 1 - 4G': -125, 'UE 2 - 5G': -125, 'UE 3 - 5G': -130 },
-  ];
+interface CSVData {
+  time_s?: number;
+  rsrp_dbm?: number;
+}
+
+interface Props {
+  csvData4G: CSVData[];
+  csvData5G: CSVData[];
+}
+
+const RSRPChart: React.FC<Props> = ({
+  csvData4G,
+  csvData5G,
+}) => {
+
+  const length = Math.max(
+    csvData4G.length,
+    csvData5G.length
+  );
+
+  const data = Array.from({ length }, (_, i) => ({
+    time: csvData4G[i]?.time_s ?? csvData5G[i]?.time_s,
+
+    '4G LTE':
+      csvData4G[i]?.rsrp_dbm,
+
+    '5G NR':
+      csvData5G[i]?.rsrp_dbm,
+  }));
 
   return (
     <div className="w-full h-96">
+
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+
+        <LineChart
+          data={data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 10,
+            bottom: 5,
+          }}
+        >
+
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#374151"
+          />
+
           <XAxis
-            dataKey="distance"
-            label={{ value: 'Distance (m)', position: 'insideBottomRight', offset: -10 }}
-            domain={[100, 500]}
-            ticks={[100, 200, 300, 400, 500]}
+            dataKey="time"
             stroke="#9CA3AF"
+            label={{
+              value: 'Temps (s)',
+              position: 'insideBottomRight',
+              offset: -10,
+            }}
           />
+
           <YAxis
-            label={{ value: 'RSRP (dBm)', angle: -90, position: 'insideLeft' }}
-            domain={[-130, -60]}
-            ticks={[-60, -80, -100, -120, -130]}
             stroke="#9CA3AF"
+            domain={[-120, -60]}
+            label={{
+              value: 'RSRP (dBm)',
+              angle: -90,
+              position: 'insideLeft',
+            }}
           />
+
           <Tooltip
+            formatter={(value: any) =>
+              [`${value} dBm`, 'RSRP']
+            }
             contentStyle={{
               backgroundColor: '#1F2937',
               border: '1px solid #4B5563',
               borderRadius: '8px',
               color: '#E5E7EB',
             }}
-            formatter={(value) => `${value} dBm`}
-            cursor={{ stroke: '#6366F1', strokeWidth: 2 }}
           />
-          <Legend
-            wrapperStyle={{ paddingTop: '20px', color: '#E5E7EB' }}
-          />
+
+          <Legend />
+
           <Line
             type="monotone"
-            dataKey="UE 1 - 4G"
-            stroke="#F87171"
+            dataKey="4G LTE"
+            stroke="#ef4444"
             strokeWidth={3}
-            dot={{ fill: '#FCA5A5', r: 5 }}
+            dot={false}
             activeDot={{ r: 7 }}
           />
+
           <Line
             type="monotone"
-            dataKey="UE 2 - 5G"
-            stroke="#38BDF8"
+            dataKey="5G NR"
+            stroke="#3b82f6"
             strokeWidth={3}
-            dot={{ fill: '#7DD3FC', r: 5 }}
+            dot={false}
             activeDot={{ r: 7 }}
           />
-          <Line
-            type="monotone"
-            dataKey="UE 3 - 5G"
-            stroke="#0EA5E9"
-            strokeWidth={3}
-            dot={{ fill: '#06B6D4', r: 5 }}
-            activeDot={{ r: 7 }}
-          />
+
         </LineChart>
+
       </ResponsiveContainer>
+
     </div>
   );
 };
