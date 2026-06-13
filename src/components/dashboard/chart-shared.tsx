@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ReactNode } from 'react'
 
@@ -27,6 +28,8 @@ export function ChartCard({
   title: string
   children: ReactNode
 }) {
+  const [expanded, setExpanded] = useState(false)
+
   return (
     <Card className="bg-background border border-border shadow-sm">
       <CardHeader className="pb-2 pt-3 px-4">

@@ -23,8 +23,10 @@ export const initialState: DashboardState = {
   sinrData      : [],
   rsrpData      : [],
   lossData      : [],
+  latencyData   : [],
+  jitterData    : [],
   logs          : [],
-  kpi           : { avgThroughput: 0, peakThroughput: 0, avgSINR: undefined, avgRSRP: undefined, avgLoss: 0 },
+  kpi           : { avgThroughput: 0, peakThroughput: 0, avgSINR: undefined, avgRSRP: undefined, avgLoss: 0, avgLatency: undefined, avgJitter: undefined },
   activeNodes   : [],
   simTime       : 0,
 }
@@ -75,6 +77,8 @@ function computeKPI(nodes: Record<number, NodeState>, prev: KPIData): KPIData {
     avgSINR       : avg(ues.map(n => n.sinr)),
     avgRSRP       : avg(ues.map(n => n.rsrp)),
     avgLoss       : avg(ues.map(n => n.loss_pct)) ?? 0,
+    avgLatency    : avg(ues.map(n => n.latency)),
+    avgJitter     : avg(ues.map(n => n.jitter)),
   }
 }
 
@@ -128,6 +132,10 @@ export function dashboardReducer(
         rsrp      : ev.rsrp,
         throughput: ev.throughput,
         loss_pct  : ev.loss_pct,
+        tx_bytes  : ev.tx_bytes,
+        rx_bytes  : ev.rx_bytes,
+        latency   : ev.latency,
+        jitter    : ev.jitter,
       }
       const nodes = { ...state.nodes, [ev.node]: updatedNode }
 
@@ -136,11 +144,13 @@ export function dashboardReducer(
       const sinrData       = mergeChartPoint(state.sinrData,       ev.time, key, ev.sinr)
       const rsrpData       = mergeChartPoint(state.rsrpData,       ev.time, key, ev.rsrp)
       const lossData       = mergeChartPoint(state.lossData,       ev.time, key, ev.loss_pct)
+      const latencyData    = mergeChartPoint(state.latencyData,    ev.time, key, ev.latency)
+      const jitterData     = mergeChartPoint(state.jitterData,     ev.time, key, ev.jitter)
 
-      // Track active nodes
+      // Track active nodes (limit to 3 UEs)
       const activeNodes = state.activeNodes.includes(ev.node)
         ? state.activeNodes
-        : [...state.activeNodes, ev.node].sort((a, b) => a - b)
+        : [...state.activeNodes, ev.node].sort((a, b) => a - b).slice(0, 3)
 
       const kpi = computeKPI(nodes, state.kpi)
 
@@ -151,6 +161,8 @@ export function dashboardReducer(
         sinrData,
         rsrpData,
         lossData,
+        latencyData,
+        jitterData,
         activeNodes,
         kpi,
         simTime: ev.time,

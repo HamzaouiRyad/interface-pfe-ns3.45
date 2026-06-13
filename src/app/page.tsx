@@ -89,7 +89,7 @@ export default function DashboardPage() {
 
   // Render
   return (
-    <div className="min-h-screen bg-[#020817] text-slate-100 p-4 space-y-4">
+    <div className="min-h-screen bg-background text-foreground p-4 space-y-4">
 
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
