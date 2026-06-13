@@ -45,7 +45,7 @@ export function TechToggle({ value, onChange, disabled = false }: Props) {
               'focus-visible:outline-none focus-visible:z-10',
               isActive
                 ? `${active} shadow-inner focus-visible:ring-1 ${ring}`
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800',
+                : 'text-foreground hover:text-foreground hover:bg-slate-800',
               disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
               i > 0 ? 'border-l border-slate-700' : '',
             ].join(' ')}

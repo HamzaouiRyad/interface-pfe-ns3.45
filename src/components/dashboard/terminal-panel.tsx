@@ -205,7 +205,7 @@ export function TerminalPanel({ onClose }: Props) {
   const statusBadge: Record<ConnState, { label: string; cls: string }> = {
     connecting: {
       label: "○ connecting…",
-      cls: "border-slate-600  text-slate-400 animate-pulse",
+      cls: "border-slate-600  text-foreground animate-pulse",
     },
     open: { label: "● connected", cls: "border-emerald-700 text-emerald-400" },
     closed: { label: "○ closed", cls: "border-slate-600  text-slate-500" },
@@ -220,7 +220,7 @@ export function TerminalPanel({ onClose }: Props) {
       <CardHeader className="px-3 py-1.5 flex-row items-center justify-between space-y-0 shrink-0 border-b border-slate-800">
         <div className="flex items-center gap-2 min-w-0">
           {/* Icon */}
-          <span className="text-slate-400 text-xs select-none shrink-0">⌨</span>
+          <span className="text-foreground text-xs select-none shrink-0">⌨</span>
 
           <span className="text-[11px] font-mono text-slate-300 font-semibold shrink-0">
             Terminal
@@ -251,8 +251,8 @@ export function TerminalPanel({ onClose }: Props) {
               onClick={() => setHeightKey(k)}
               className={`text-[9px] font-mono px-1.5 py-0.5 rounded transition-colors ${
                 heightKey === k
-                  ? "bg-slate-700 text-slate-200"
-                  : "text-slate-600 hover:text-slate-400"
+                  ? "bg-slate-700 text-foreground"
+                  : "text-slate-600 hover:text-foreground"
               }`}
             >
               {k.toUpperCase()}
@@ -276,7 +276,7 @@ export function TerminalPanel({ onClose }: Props) {
           {/* Clear */}
           <button
             onClick={() => termRef.current?.clear()}
-            className="text-[9px] font-mono px-1.5 py-0.5 rounded text-slate-600 hover:text-slate-400 transition-colors"
+            className="text-[9px] font-mono px-1.5 py-0.5 rounded text-slate-600 hover:text-foreground transition-colors"
             title="Clear terminal"
           >
             clear
@@ -285,7 +285,7 @@ export function TerminalPanel({ onClose }: Props) {
           {/* Close */}
           <button
             onClick={onClose}
-            className="w-5 h-5 flex items-center justify-center rounded text-slate-600 hover:text-slate-200 hover:bg-slate-800 transition-colors ml-1"
+            className="w-5 h-5 flex items-center justify-center rounded text-slate-600 hover:text-foreground hover:bg-slate-800 transition-colors ml-1"
             title="Close terminal"
           >
             ✕

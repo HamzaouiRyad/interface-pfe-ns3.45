@@ -17,7 +17,7 @@ function classifyLog(text: string): { color: string; prefix: string } {
     return { color: "text-amber-400", prefix: "⚠" };
   if (text.match(/t\s*=\s*[\d.]+/))
     return { color: "text-sky-400", prefix: "►" };
-  return { color: "text-slate-400", prefix: "·" };
+  return { color: "text-foreground", prefix: "·" };
 }
 
 export function LogPanel({ logs }: Props) {
@@ -26,7 +26,7 @@ export function LogPanel({ logs }: Props) {
   return (
     <Card className="bg-slate-900 border-slate-800 flex flex-col">
       <CardHeader className="pb-1 pt-3 px-4 flex-row items-center justify-between space-y-0">
-        <CardTitle className="text-[11px] font-mono uppercase tracking-widest text-slate-400">
+        <CardTitle className="text-[11px] font-mono uppercase tracking-widest text-foreground">
           Simulation Log
         </CardTitle>
         <Badge

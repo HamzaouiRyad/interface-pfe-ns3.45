@@ -105,7 +105,7 @@ export default function DashboardPage() {
                 N3
               </span>
             </div>
-            <h1 className="text-sm font-bold tracking-tight text-slate-100">NS3 Dashboard</h1>
+            <h1 className="text-sm font-bold tracking-tight text-foreground">NS3 Dashboard</h1>
           </div>
 
           <Separator orientation="vertical" className="h-4 bg-slate-700" />
@@ -167,7 +167,7 @@ export default function DashboardPage() {
               size="sm"
               variant="outline"
               onClick={() => control('reset')}
-              className="border-slate-700 text-slate-400 hover:text-slate-100 hover:border-slate-500 text-xs h-7 px-3 font-mono"
+              className="border-slate-700 text-foreground hover:text-foreground hover:border-slate-500 text-xs h-7 px-3 font-mono"
             >
               ↺ Reset
             </Button>
@@ -181,7 +181,7 @@ export default function DashboardPage() {
               className={`text-xs h-7 px-3 font-mono transition-colors ${
                 showTerminal
                   ? 'border-sky-600 text-sky-400 bg-sky-950/30 hover:bg-sky-950/50'
-                  : 'border-slate-700 text-slate-400 hover:text-slate-100 hover:border-slate-500'
+                  : 'border-slate-700 text-foreground hover:text-foreground hover:border-slate-500'
               }`}
             >
               ⌨ Terminal

@@ -33,28 +33,26 @@ export function KPICard({
 }: KPICardProps) {
   return (
     <Card
-      className={`bg-slate-900 border-slate-800 transition-colors ${
+      className={`bg-background text-foreground border-slate-800 transition-colors ${
         highlight ? "border-sky-500/50 shadow-sky-500/10 shadow-lg" : ""
       }`}
     >
       <CardContent className="p-4">
-        <p className="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-1">
+        <p className="text-[10px] font-mono uppercase tracking-widest ">
           {title}
         </p>
         <div className="flex items-end gap-1.5">
-          <span className="text-2xl font-bold tabular-nums text-slate-100 leading-none">
+          <span className="text-2xl font-bold tabular-nums leading-none">
             {value}
           </span>
-          <span className="text-xs text-slate-400 mb-0.5">{unit}</span>
+          <span className="text-x mb-0.5">{unit}</span>
           {trend && (
             <span className={`text-xs mb-0.5 ${trendColor[trend]}`}>
               {trendSymbol[trend]}
             </span>
           )}
         </div>
-        {sub && (
-          <p className="text-[10px] text-slate-600 mt-1 font-mono">{sub}</p>
-        )}
+        {sub && <p className="text-[10px] mt-1 font-mono">{sub}</p>}
       </CardContent>
     </Card>
   );
