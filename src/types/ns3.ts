@@ -13,6 +13,8 @@ export interface StatsEvent {
   loss_pct: number
   sinr?: number
   rsrp?: number
+  latency?: number
+  jitter?: number
 }
 
 export interface LinkEvent {
@@ -56,6 +58,10 @@ export interface NodeState {
   rsrp?: number
   throughput?: number
   loss_pct?: number
+  tx_bytes?: number
+  rx_bytes?: number
+  latency?: number
+  jitter?: number
 }
 
 export interface LinkState {
@@ -71,6 +77,8 @@ export interface KPIData {
   avgSINR: number | undefined
   avgRSRP: number | undefined
   avgLoss: number
+  avgLatency?: number | undefined
+  avgJitter?: number | undefined
 }
 
 // Client-side dashboard state
@@ -84,6 +92,8 @@ export interface DashboardState {
   sinrData: ChartPoint[]
   rsrpData: ChartPoint[]
   lossData: ChartPoint[]
+  latencyData: ChartPoint[]
+  jitterData: ChartPoint[]
   logs: string[]
   kpi: KPIData
   activeNodes: number[]
