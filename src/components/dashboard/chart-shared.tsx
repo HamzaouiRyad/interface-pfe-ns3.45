@@ -1,40 +1,40 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { ReactNode } from 'react'
 
-// Per-node color palette
-
+// Per-node color palette (keep as-is, these are data colors not UI theme colors)
 export const NODE_COLORS: Record<number, string> = {
-  1: '#38bdf8', // sky-400    — UE1
-  2: '#34d399', // emerald-400 — UE2
-  3: '#fb923c', // orange-400  — UE3
-  4: '#f472b6', // pink-400    — UE4
-  5: '#a78bfa', // violet-400  — UE5
+  1: '#38bdf8', // sky-400
+  2: '#34d399', // emerald-400
+  3: '#fb923c', // orange-400
+  4: '#f472b6', // pink-400
+  5: '#a78bfa', // violet-400
 }
 
+// Use CSS variables / shadcn theme tokens for charts
 export const CHART_THEME = {
-  grid  : '#1e293b', // slate-800
-  axis  : '#475569', // slate-600
-  text  : '#64748b', // slate-500
-  bg    : 'transparent',
+  grid: 'hsl(var(--border))',
+  axis: 'hsl(var(--muted-foreground))',
+  text: 'hsl(var(--muted-foreground))',
+  bg: 'transparent',
 }
-
-// Generic chart card wrapper
 
 export function ChartCard({
   title,
   children,
 }: {
-  title   : string
-  children: React.ReactNode
+  title: string
+  children: ReactNode
 }) {
   return (
-    <Card className="bg-slate-900 border-slate-800">
+    <Card className="bg-background border border-border shadow-sm">
       <CardHeader className="pb-2 pt-3 px-4">
-        <CardTitle className="text-[11px] font-mono uppercase tracking-widest text-slate-400">
+        <CardTitle className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
           {title}
         </CardTitle>
       </CardHeader>
+
       <CardContent className="px-2 pb-3">
         {children}
       </CardContent>
