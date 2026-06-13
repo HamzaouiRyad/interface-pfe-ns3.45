@@ -98,25 +98,25 @@ export default function DashboardPage() {
           <div className="flex items-center gap-2">
             <div className={`w-7 h-7 rounded border flex items-center justify-center transition-colors ${
               isNR
-                ? 'bg-violet-500/20 border-violet-500/40'
-                : 'bg-sky-500/20    border-sky-500/40'
+                ? 'bg-background/20 border-violet-500/40'
+                : 'bg-background/20    border-sky-500/40'
             }`}>
-              <span className={`text-xs font-bold ${isNR ? 'text-violet-400' : 'text-sky-400'}`}>
+              <span className={`text-foreground font-bold ${isNR ? 'text-foreground' : 'text-foreground'}`}>
                 N3
               </span>
             </div>
-            <h1 className="text-sm font-bold tracking-tight text-foreground">NS3 Dashboard</h1>
+            <h1 className="text-foreground font-bold tracking-tight text-foreground">NS3 Dashboard</h1>
           </div>
 
-          <Separator orientation="vertical" className="h-4 bg-slate-700" />
+          <Separator orientation="vertical" className="h-4 bg-background" />
 
           {/* Mode badge */}
           <Badge
             variant="outline"
             className={`text-[10px] font-mono px-2 py-0.5 ${
               isMock
-                ? 'border-violet-700 text-violet-400 bg-violet-950/40'
-                : 'border-sky-700 text-sky-400 bg-sky-950/40'
+                ? 'border-violet-700 text-foreground bg-background/40'
+                : 'border-sky-700 text-foreground bg-background/40'
             }`}
           >
             {isMock ? '⚡ Mock' : '🔬 NS3 Live'}
@@ -125,7 +125,7 @@ export default function DashboardPage() {
           <SimStatusBadge status={status} />
 
           {hasData && (
-            <span className="text-[10px] font-mono text-slate-500">
+            <span className="text-[10px] font-mono text-foreground">
               {techLabel} · t = {simTime.toFixed(1)} s
             </span>
           )}
@@ -144,14 +144,14 @@ export default function DashboardPage() {
             disabled={isRunning}
           />
 
-          <Separator orientation="vertical" className="h-5 bg-slate-700" />
+          <Separator orientation="vertical" className="h-5 bg-background" />
 
           <div className="flex gap-2">
             <Button
               size="sm"
               onClick={() => control('start', selectedTech)}
               disabled={isRunning}
-              className="bg-emerald-700 hover:bg-emerald-600 text-white text-xs h-7 px-3 font-mono disabled:opacity-40"
+              className="bg-background hover:bg-background text-foreground text-foreground h-7 px-3 font-mono disabled:opacity-40"
             >
               ▶ Start
             </Button>
@@ -159,7 +159,7 @@ export default function DashboardPage() {
               size="sm"
               onClick={() => control('stop')}
               disabled={!isRunning}
-              className="bg-red-800 hover:bg-red-700 text-white text-xs h-7 px-3 font-mono disabled:opacity-40"
+              className="bg-background hover:bg-background text-foreground text-foreground h-7 px-3 font-mono disabled:opacity-40"
             >
               ■ Stop
             </Button>
@@ -167,20 +167,20 @@ export default function DashboardPage() {
               size="sm"
               variant="outline"
               onClick={() => control('reset')}
-              className="border-slate-700 text-foreground hover:text-foreground hover:border-slate-500 text-xs h-7 px-3 font-mono"
+              className="border-slate-700 text-foreground hover:text-foreground hover:border-slate-500 text-foreground h-7 px-3 font-mono"
             >
               ↺ Reset
             </Button>
 
-            <Separator orientation="vertical" className="h-5 bg-slate-700 self-center" />
+            <Separator orientation="vertical" className="h-5 bg-background self-center" />
 
             <Button
               size="sm"
               variant="outline"
               onClick={() => setShowTerminal(v => !v)}
-              className={`text-xs h-7 px-3 font-mono transition-colors ${
+              className={`text-foreground h-7 px-3 font-mono transition-colors ${
                 showTerminal
-                  ? 'border-sky-600 text-sky-400 bg-sky-950/30 hover:bg-sky-950/50'
+                  ? 'border-sky-600 text-foreground bg-background/30 hover:bg-background/50'
                   : 'border-slate-700 text-foreground hover:text-foreground hover:border-slate-500'
               }`}
             >
@@ -190,7 +190,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <Separator className="bg-slate-800" />
+      <Separator className="bg-background" />
 
       {/* KPI Row */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -259,17 +259,17 @@ export default function DashboardPage() {
 
       {/* Footer */}
       <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between">
-        <p className="text-[9px] font-mono text-slate-700">
+        <p className="text-[9px] font-mono text-foreground">
           NS3 Dashboard — Next.js + shadcn/ui + recharts
         </p>
         {isMock && (
-          <p className="text-[9px] font-mono text-slate-700">
+          <p className="text-[9px] font-mono text-foreground">
             Set{' '}
-            <span className={isNR ? 'text-violet-500' : 'text-sky-500'}>
+            <span className={isNR ? 'text-foreground' : 'text-foreground'}>
               {isNR ? 'NS3_SCRIPT_5G' : 'NS3_SCRIPT_4G'}
             </span>{' '}
-            + <span className="text-slate-500">NS3_PATH</span> in{' '}
-            <span className="text-slate-500">.env.local</span> to enable live data
+            + <span className="text-foreground">NS3_PATH</span> in{' '}
+            <span className="text-foreground">.env.local</span> to enable live data
           </p>
         )}
       </div>

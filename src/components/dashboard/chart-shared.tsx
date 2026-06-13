@@ -33,7 +33,7 @@ export function ChartCard({
   return (
     <Card className="bg-background border border-border shadow-sm">
       <CardHeader className="pb-2 pt-3 px-4">
-        <CardTitle className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+        <CardTitle className="text-foreground font-mono uppercase tracking-widest text-foreground">
           {title}
         </CardTitle>
       </CardHeader>

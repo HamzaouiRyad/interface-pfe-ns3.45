@@ -166,7 +166,7 @@ export function TopologyCanvas({ nodes, links, status, tech }: Props) {
   }, [nodes, links, status, isNR])
 
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-background border-border">
       <CardHeader className="pb-1 pt-3 px-4">
         <CardTitle className="text-[11px] font-mono uppercase tracking-widest text-foreground">
           {isNR ? '5G NR' : '4G LTE'} Topology

@@ -18,9 +18,9 @@ const trendSymbol: Record<string, string> = {
   neutral: "—",
 };
 const trendColor: Record<string, string> = {
-  up: "text-emerald-400",
-  down: "text-red-400",
-  neutral: "text-slate-500",
+  up: "text-foreground",
+  down: "text-foreground",
+  neutral: "text-foreground",
 };
 
 export function KPICard({
@@ -42,12 +42,12 @@ export function KPICard({
           {title}
         </p>
         <div className="flex items-end gap-1.5">
-          <span className="text-2xl font-bold tabular-nums leading-none">
+          <span className="text-foreground font-bold tabular-nums leading-none">
             {value}
           </span>
-          <span className="text-x mb-0.5">{unit}</span>
+          <span className="text-foreground mb-0.5">{unit}</span>
           {trend && (
-            <span className={`text-xs mb-0.5 ${trendColor[trend]}`}>
+            <span className={`text-foreground mb-0.5 ${trendColor[trend]}`}>
               {trendSymbol[trend]}
             </span>
           )}
@@ -64,15 +64,15 @@ export function SimStatusBadge({ status }: { status: string }) {
   const cfg: Record<string, { label: string; cls: string }> = {
     idle: {
       label: "● Idle",
-      cls: "bg-slate-700 text-slate-300 border-slate-600",
+      cls: "bg-background text-foreground border-slate-600",
     },
     running: {
       label: "● Running",
-      cls: "bg-emerald-950 text-emerald-400 border-emerald-700 animate-pulse",
+      cls: "bg-background text-foreground border-emerald-700 animate-pulse",
     },
     stopped: {
       label: "● Stopped",
-      cls: "bg-red-950 text-red-400 border-red-800",
+      cls: "bg-background text-foreground border-red-800",
     },
   };
   const { label, cls } = cfg[status] ?? cfg.idle;

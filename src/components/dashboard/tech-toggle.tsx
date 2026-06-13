@@ -15,11 +15,11 @@ const TECHS: { id: SimTech; label: string; sub: string }[] = [
 
 const STYLES: Record<SimTech, { active: string; ring: string }> = {
   '4g': {
-    active: 'bg-sky-600    text-white border-sky-500    shadow-sky-900/60',
+    active: 'bg-background    text-foreground border-sky-500    shadow-sky-900/60',
     ring  : 'ring-sky-500',
   },
   '5g': {
-    active: 'bg-violet-600 text-white border-violet-500 shadow-violet-900/60',
+    active: 'bg-background text-foreground border-violet-500 shadow-violet-900/60',
     ring  : 'ring-violet-500',
   },
 }
@@ -41,24 +41,24 @@ export function TechToggle({ value, onChange, disabled = false }: Props) {
             disabled={disabled}
             onClick={() => onChange(tech.id)}
             className={[
-              'relative flex items-center gap-1 px-3 py-1 text-xs font-mono transition-all duration-150',
+              'relative flex items-center gap-1 px-3 py-1 text-foreground font-mono transition-all duration-150',
               'focus-visible:outline-none focus-visible:z-10',
               isActive
                 ? `${active} shadow-inner focus-visible:ring-1 ${ring}`
-                : 'text-foreground hover:text-foreground hover:bg-slate-800',
+                : 'text-foreground hover:text-foreground hover:bg-background',
               disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
               i > 0 ? 'border-l border-slate-700' : '',
             ].join(' ')}
             aria-pressed={isActive}
           >
-            <span className="font-bold text-sm leading-none">{tech.label}</span>
+            <span className="font-bold text-foreground leading-none">{tech.label}</span>
             <span className={`text-[9px] leading-none ${isActive ? 'opacity-80' : 'opacity-50'}`}>
               {tech.sub}
             </span>
 
             {/* Active indicator dot */}
             {isActive && (
-              <span className="absolute top-1 right-1 w-1 h-1 rounded-full bg-white/60" />
+              <span className="absolute top-1 right-1 w-1 h-1 rounded-full bg-background/60" />
             )}
           </button>
         )

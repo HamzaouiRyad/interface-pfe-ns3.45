@@ -10,13 +10,13 @@ interface Props {
 }
 
 function classifyLog(text: string): { color: string; prefix: string } {
-  if (text.includes("[Mock]")) return { color: "text-violet-400", prefix: "◆" };
+  if (text.includes("[Mock]")) return { color: "text-foreground", prefix: "◆" };
   if (text.includes("error") || text.includes("Error"))
-    return { color: "text-red-400", prefix: "✕" };
+    return { color: "text-foreground", prefix: "✕" };
   if (text.includes("warn") || text.includes("Warn"))
-    return { color: "text-amber-400", prefix: "⚠" };
+    return { color: "text-foreground", prefix: "⚠" };
   if (text.match(/t\s*=\s*[\d.]+/))
-    return { color: "text-sky-400", prefix: "►" };
+    return { color: "text-foreground", prefix: "►" };
   return { color: "text-foreground", prefix: "·" };
 }
 
@@ -24,14 +24,14 @@ export function LogPanel({ logs }: Props) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Card className="bg-slate-900 border-slate-800 flex flex-col">
+    <Card className="bg-background border-slate-800 flex flex-col">
       <CardHeader className="pb-1 pt-3 px-4 flex-row items-center justify-between space-y-0">
         <CardTitle className="text-[11px] font-mono uppercase tracking-widest text-foreground">
           Simulation Log
         </CardTitle>
         <Badge
           variant="outline"
-          className="text-[9px] font-mono px-1.5 py-0 border-slate-700 text-slate-500"
+          className="text-[9px] font-mono px-1.5 py-0 border-slate-700 text-foreground"
         >
           {logs.length} lines
         </Badge>
@@ -39,7 +39,7 @@ export function LogPanel({ logs }: Props) {
       <CardContent className="p-0 flex-1">
         <ScrollArea className="h-44 px-3 pb-2">
           {logs.length === 0 ? (
-            <p className="text-slate-600 text-[10px] font-mono pt-3">
+            <p className="text-foreground text-[10px] font-mono pt-3">
               No output yet — press Start to begin.
             </p>
           ) : (
