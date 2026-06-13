@@ -98,7 +98,7 @@ export function LossChart({ data, activeNodes }: Props) {
             }}
             labelStyle={{ color: "#94a3b8", fontFamily: "monospace" }}
             labelFormatter={(v) => `t = ${Number(v).toFixed(2)} s`}
-            formatter={(v: number) => [`${v.toFixed(2)} %`]}
+            formatter={(v: any) => [`${Number(v).toFixed(2)} %`]}
           />
           <Legend
             iconType="circle"

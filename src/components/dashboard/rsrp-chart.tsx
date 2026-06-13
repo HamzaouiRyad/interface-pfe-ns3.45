@@ -42,7 +42,7 @@ export function RSRPChart({ data, activeNodes }: Props) {
             contentStyle={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 6, fontSize: 11 }}
             labelStyle={{ color: '#94a3b8', fontFamily: 'monospace' }}
             labelFormatter={v => `t = ${Number(v).toFixed(2)} s`}
-            formatter={(v: number) => [`${v.toFixed(1)} dBm`]}
+            formatter={(v: any) => [`${Number(v).toFixed(1)} dBm`]}
           />
           <Legend
             iconType="circle"
