@@ -11,7 +11,7 @@ const NS3_SCRIPT_5G  = process.env.NS3_SCRIPT_5G   ?? 'scratch/fixed-5g'
 /** True when NS3_PATH is not configured → use mock data */
 export const IS_MOCK = !NS3_PATH
 
-// ── Mock topology ─────────────────────────────────────────────────────────────
+// Mock topology
 
 const MOCK_NODES_4G = [
   { id: 0, x: 300, y:  60 }, // eNodeB
@@ -46,7 +46,7 @@ const MOCK_LINKS_5G = [
   { src: 0, dst: 5, delay: '2ms' },
 ]
 
-// ── UE profiles ───────────────────────────────────────────────────────────────
+// UE profiles
 
 // 4G LTE: 8–22 Mbps, SINR 6–18 dB, RSRP -95–-75 dBm
 const UE_PROFILES_4G = [
@@ -65,7 +65,7 @@ const UE_PROFILES_5G = [
   { node: 5, baseTp:  70, baseSINR: 19, baseRSRP:  -76, baseLoss: 0.8 },
 ]
 
-// ── Mock runner ───────────────────────────────────────────────────────────────
+// Mock runner
 
 let mockTime = 0
 
@@ -133,7 +133,7 @@ function stopMock() {
   }
 }
 
-// ── Real NS3 process ──────────────────────────────────────────────────────────
+// Real NS3 process
 
 function startNS3(tech: SimTech) {
   const script = tech === '5g' ? NS3_SCRIPT_5G : NS3_SCRIPT_4G
@@ -163,7 +163,7 @@ function startNS3(tech: SimTech) {
   })
 }
 
-// ── Public API ────────────────────────────────────────────────────────────────
+// Public API
 
 export function startSimulation(tech: SimTech = '4g') {
   if (simState.status === 'running') return

@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-// ── Per-node color palette ────────────────────────────────────────────────────
+// Per-node color palette
 
 export const NODE_COLORS: Record<number, string> = {
   1: '#38bdf8', // sky-400    — UE1
@@ -19,7 +19,7 @@ export const CHART_THEME = {
   bg    : 'transparent',
 }
 
-// ── Generic chart card wrapper ────────────────────────────────────────────────
+// Generic chart card wrapper
 
 export function ChartCard({
   title,

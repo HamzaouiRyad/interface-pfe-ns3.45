@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useReducer, useCallback, useRef, useState } from 'react'
+import dynamic                        from 'next/dynamic'
 import { Button }                     from '@/components/ui/button'
 import { Badge }                      from '@/components/ui/badge'
 import { Separator }                  from '@/components/ui/separator'
@@ -15,20 +16,27 @@ import { LossChart }                  from '@/components/dashboard/loss-chart'
 import { TopologyCanvas }             from '@/components/dashboard/topology-canvas'
 import { LogPanel }                   from '@/components/dashboard/log-panel'
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// TerminalPanel uses xterm.js (DOM-only) — must be loaded client-side
+const TerminalPanel = dynamic(
+  () => import('@/components/dashboard/terminal-panel').then(m => m.TerminalPanel),
+  { ssr: false, loading: () => null },
+)
+
+// Helpers
 
 function fmt(n: number | undefined, decimals = 2, fallback = '—'): string {
   return n !== undefined ? n.toFixed(decimals) : fallback
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
+// Page
 
 export default function DashboardPage() {
   const [state, dispatch]   = useReducer(dashboardReducer, initialState)
   const [selectedTech, setSelectedTech] = useState<SimTech>('4g')
+  const [showTerminal, setShowTerminal] = useState(false)
   const sseRef              = useRef<EventSource | null>(null)
 
-  // ── SSE connection ─────────────────────────────────────────────────────────
+  // SSE connection
   useEffect(() => {
     function connect() {
       const sse = new EventSource('/api/stream')
@@ -51,7 +59,7 @@ export default function DashboardPage() {
     return () => sseRef.current?.close()
   }, [])
 
-  // ── Control actions ────────────────────────────────────────────────────────
+  // Control actions
   const control = useCallback(async (action: 'start' | 'stop' | 'reset', tech?: SimTech) => {
     if (action === 'reset') dispatch({ type: 'RESET' })
     await fetch('/api/control', {
@@ -75,15 +83,15 @@ export default function DashboardPage() {
   const displayTech: SimTech = isRunning ? runningTech : selectedTech
   const isNR       = displayTech === '5g'
 
-  // ── Tech-specific reference labels ────────────────────────────────────────
+  // Tech-specific reference labels
   const techLabel = isNR ? '5G NR' : '4G LTE'
   const bsLabel   = isNR ? 'gNB'   : 'eNB'
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // Render
   return (
     <div className="min-h-screen bg-[#020817] text-slate-100 p-4 space-y-4">
 
-      {/* ── Header ── */}
+      {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           {/* Logo */}
@@ -163,13 +171,28 @@ export default function DashboardPage() {
             >
               ↺ Reset
             </Button>
+
+            <Separator orientation="vertical" className="h-5 bg-slate-700 self-center" />
+
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setShowTerminal(v => !v)}
+              className={`text-xs h-7 px-3 font-mono transition-colors ${
+                showTerminal
+                  ? 'border-sky-600 text-sky-400 bg-sky-950/30 hover:bg-sky-950/50'
+                  : 'border-slate-700 text-slate-400 hover:text-slate-100 hover:border-slate-500'
+              }`}
+            >
+              ⌨ Terminal
+            </Button>
           </div>
         </div>
       </div>
 
       <Separator className="bg-slate-800" />
 
-      {/* ── KPI Row ── */}
+      {/* KPI Row */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <KPICard
           title="Avg Throughput"
@@ -204,7 +227,7 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* ── Main content: Topology + Charts ── */}
+      {/* Main content: Topology + Charts */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
 
         {/* Left: topology + log */}
@@ -227,7 +250,14 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* ── Footer ── */}
+      {/* Integrated Terminal */}
+      {showTerminal && (
+        <div className="sticky bottom-0 left-0 right-0 z-20 mx-[-1rem] px-4">
+          <TerminalPanel onClose={() => setShowTerminal(false)} />
+        </div>
+      )}
+
+      {/* Footer */}
       <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between">
         <p className="text-[9px] font-mono text-slate-700">
           NS3 Dashboard — Next.js + shadcn/ui + recharts

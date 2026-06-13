@@ -1,31 +1,27 @@
-'use client'
+"use client";
 
-import { useEffect, useRef }         from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ScrollArea }                 from '@/components/ui/scroll-area'
-import { Badge }                      from '@/components/ui/badge'
+import { useRef } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
 
 interface Props {
-  logs: string[]
+  logs: string[];
 }
 
 function classifyLog(text: string): { color: string; prefix: string } {
-  if (text.includes('[Mock]'))   return { color: 'text-violet-400',  prefix: '◆' }
-  if (text.includes('error') || text.includes('Error'))
-                                 return { color: 'text-red-400',     prefix: '✕' }
-  if (text.includes('warn')  || text.includes('Warn'))
-                                 return { color: 'text-amber-400',   prefix: '⚠' }
-  if (text.match(/t\s*=\s*[\d.]+/)) return { color: 'text-sky-400', prefix: '►' }
-  return { color: 'text-slate-400', prefix: '·' }
+  if (text.includes("[Mock]")) return { color: "text-violet-400", prefix: "◆" };
+  if (text.includes("error") || text.includes("Error"))
+    return { color: "text-red-400", prefix: "✕" };
+  if (text.includes("warn") || text.includes("Warn"))
+    return { color: "text-amber-400", prefix: "⚠" };
+  if (text.match(/t\s*=\s*[\d.]+/))
+    return { color: "text-sky-400", prefix: "►" };
+  return { color: "text-slate-400", prefix: "·" };
 }
 
 export function LogPanel({ logs }: Props) {
-  const bottomRef = useRef<HTMLDivElement>(null)
-
-  // Auto-scroll to newest entry
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [logs.length])
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   return (
     <Card className="bg-slate-900 border-slate-800 flex flex-col">
@@ -49,16 +45,18 @@ export function LogPanel({ logs }: Props) {
           ) : (
             <div className="space-y-0.5 pt-1">
               {logs.map((line, i) => {
-                const { color, prefix } = classifyLog(line)
+                const { color, prefix } = classifyLog(line);
                 return (
                   <div
                     key={i}
                     className={`flex gap-1.5 text-[10px] font-mono leading-relaxed ${color}`}
                   >
-                    <span className="select-none opacity-40 shrink-0">{prefix}</span>
+                    <span className="select-none opacity-40 shrink-0">
+                      {prefix}
+                    </span>
                     <span className="break-all">{line}</span>
                   </div>
-                )
+                );
               })}
               <div ref={bottomRef} />
             </div>
@@ -66,5 +64,5 @@ export function LogPanel({ logs }: Props) {
         </ScrollArea>
       </CardContent>
     </Card>
-  )
+  );
 }

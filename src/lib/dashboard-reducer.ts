@@ -6,12 +6,12 @@ import type {
   NodeState,
 } from '@/types/ns3'
 
-// ── Constants ─────────────────────────────────────────────────────────────────
+// Constants
 
 const MAX_HISTORY = 80   // rolling chart window
 const MAX_LOGS    = 200  // max log entries kept
 
-// ── Initial state ─────────────────────────────────────────────────────────────
+// Initial state
 
 export const initialState: DashboardState = {
   status        : 'idle',
@@ -29,13 +29,13 @@ export const initialState: DashboardState = {
   simTime       : 0,
 }
 
-// ── Action type ───────────────────────────────────────────────────────────────
+// Action type
 
 export type DashboardAction =
   | { type: 'NS3_EVENT'; payload: NS3Event }
   | { type: 'RESET' }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// Helpers
 
 /** Insert/merge a value into a rolling ChartPoint array keyed by simulation time */
 function mergeChartPoint(
@@ -78,7 +78,7 @@ function computeKPI(nodes: Record<number, NodeState>, prev: KPIData): KPIData {
   }
 }
 
-// ── Reducer ───────────────────────────────────────────────────────────────────
+// Reducer
 
 export function dashboardReducer(
   state : DashboardState,
@@ -89,7 +89,7 @@ export function dashboardReducer(
   const ev = action.payload
 
   switch (ev.type) {
-    // ── Status update ────────────────────────────────────────────────────────
+    // Status update
     case 'status':
       return {
         ...state,
@@ -98,7 +98,7 @@ export function dashboardReducer(
         tech  : ev.tech   ?? state.tech,
       }
 
-    // ── Node position ────────────────────────────────────────────────────────
+    // Node position
     case 'node_pos':
       return {
         ...state,
@@ -108,7 +108,7 @@ export function dashboardReducer(
         },
       }
 
-    // ── Link topology ────────────────────────────────────────────────────────
+    // Link topology
     case 'link': {
       // deduplicate
       const exists = state.links.some(l => l.src === ev.src && l.dst === ev.dst)
@@ -116,7 +116,7 @@ export function dashboardReducer(
       return { ...state, links: [...state.links, { src: ev.src, dst: ev.dst, delay: ev.delay }] }
     }
 
-    // ── Stats ────────────────────────────────────────────────────────────────
+    // Stats
     case 'stats': {
       const key = `n${ev.node}`
 
@@ -157,7 +157,7 @@ export function dashboardReducer(
       }
     }
 
-    // ── Log ──────────────────────────────────────────────────────────────────
+    // Log
     case 'log': {
       const logs = [...state.logs, ev.text]
       return {

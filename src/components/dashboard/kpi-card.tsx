@@ -1,29 +1,40 @@
-'use client'
+"use client";
 
-import { Card, CardContent }        from '@/components/ui/card'
-import { Badge }                    from '@/components/ui/badge'
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface KPICardProps {
-  title    : string
-  value    : string | number
-  unit     : string
-  sub?     : string
-  trend?   : 'up' | 'down' | 'neutral'
-  highlight?: boolean
+  title: string;
+  value: string | number;
+  unit: string;
+  sub?: string;
+  trend?: "up" | "down" | "neutral";
+  highlight?: boolean;
 }
 
-const trendSymbol: Record<string, string> = { up: '↑', down: '↓', neutral: '—' }
-const trendColor : Record<string, string> = {
-  up     : 'text-emerald-400',
-  down   : 'text-red-400',
-  neutral: 'text-slate-500',
-}
+const trendSymbol: Record<string, string> = {
+  up: "↑",
+  down: "↓",
+  neutral: "—",
+};
+const trendColor: Record<string, string> = {
+  up: "text-emerald-400",
+  down: "text-red-400",
+  neutral: "text-slate-500",
+};
 
-export function KPICard({ title, value, unit, sub, trend, highlight }: KPICardProps) {
+export function KPICard({
+  title,
+  value,
+  unit,
+  sub,
+  trend,
+  highlight,
+}: KPICardProps) {
   return (
     <Card
       className={`bg-slate-900 border-slate-800 transition-colors ${
-        highlight ? 'border-sky-500/50 shadow-sky-500/10 shadow-lg' : ''
+        highlight ? "border-sky-500/50 shadow-sky-500/10 shadow-lg" : ""
       }`}
     >
       <CardContent className="p-4">
@@ -46,21 +57,33 @@ export function KPICard({ title, value, unit, sub, trend, highlight }: KPICardPr
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
 
-// ── Status badge (reused in header) ──────────────────────────────────────────
+// Status badge (reused in header)
 
 export function SimStatusBadge({ status }: { status: string }) {
   const cfg: Record<string, { label: string; cls: string }> = {
-    idle   : { label: '● Idle',    cls: 'bg-slate-700 text-slate-300 border-slate-600' },
-    running: { label: '● Running', cls: 'bg-emerald-950 text-emerald-400 border-emerald-700 animate-pulse' },
-    stopped: { label: '● Stopped', cls: 'bg-red-950 text-red-400 border-red-800' },
-  }
-  const { label, cls } = cfg[status] ?? cfg.idle
+    idle: {
+      label: "● Idle",
+      cls: "bg-slate-700 text-slate-300 border-slate-600",
+    },
+    running: {
+      label: "● Running",
+      cls: "bg-emerald-950 text-emerald-400 border-emerald-700 animate-pulse",
+    },
+    stopped: {
+      label: "● Stopped",
+      cls: "bg-red-950 text-red-400 border-red-800",
+    },
+  };
+  const { label, cls } = cfg[status] ?? cfg.idle;
   return (
-    <Badge variant="outline" className={`font-mono text-[10px] px-2 py-0.5 ${cls}`}>
+    <Badge
+      variant="outline"
+      className={`font-mono text-[10px] px-2 py-0.5 ${cls}`}
+    >
       {label}
     </Badge>
-  )
+  );
 }

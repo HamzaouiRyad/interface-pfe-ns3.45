@@ -2,7 +2,7 @@ import 'server-only'
 import type { SimStatus, SimTech } from '@/types/ns3'
 import type { ChildProcess } from 'child_process'
 
-// ── Types ────────────────────────────────────────────────────────────────────
+// Types
 
 export interface SSEClient {
   id: string
@@ -17,7 +17,7 @@ interface GlobalSimState {
   clients     : Map<string, SSEClient>
 }
 
-// ── Singleton (survives Next.js hot-reload in dev) ───────────────────────────
+// Singleton (survives Next.js hot-reload in dev)
 
 declare global {
   // eslint-disable-next-line no-var
@@ -36,7 +36,7 @@ if (!globalThis.__simState) {
 
 export const simState: GlobalSimState = globalThis.__simState!
 
-// ── SSE client registry ───────────────────────────────────────────────────────
+// SSE client registry
 
 export function addClient(
   id: string,
@@ -49,7 +49,7 @@ export function removeClient(id: string) {
   simState.clients.delete(id)
 }
 
-// ── Broadcast helper ──────────────────────────────────────────────────────────
+// Broadcast helper
 
 const enc = new TextEncoder()
 

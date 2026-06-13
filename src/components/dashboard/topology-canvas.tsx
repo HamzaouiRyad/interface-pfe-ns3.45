@@ -16,7 +16,7 @@ const W = 560
 const H = 320
 const PAD = 44
 
-// ── Draw helpers ──────────────────────────────────────────────────────────────
+// Draw helpers
 
 function toCanvas(
   x: number, y: number,
@@ -50,7 +50,7 @@ function drawGrid(ctx: CanvasRenderingContext2D) {
   }
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// Component
 
 export function TopologyCanvas({ nodes, links, status, tech }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -91,7 +91,7 @@ export function TopologyCanvas({ nodes, links, status, tech }: Props) {
     // Base-station color: blue for 4G eNB, violet for 5G gNB
     const bsColor = isNR ? '#8b5cf6' : '#3b82f6'
 
-    // ── Links ────────────────────────────────────────────────────────────────
+    // Links
     for (const link of links) {
       const a = nodes[link.src], b = nodes[link.dst]
       if (!a || !b) continue
@@ -115,7 +115,7 @@ export function TopologyCanvas({ nodes, links, status, tech }: Props) {
       ctx.fillText(link.delay, (x1 + x2) / 2, (y1 + y2) / 2 - 4)
     }
 
-    // ── Nodes ────────────────────────────────────────────────────────────────
+    // Nodes
     for (const id of ids) {
       const node     = nodes[id]
       const { cx, cy } = pos(id)

@@ -1,33 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+// xterm.js must be loaded globally — it injects CSS for the canvas terminal
+import "@xterm/xterm/css/xterm.css";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "NS3 Network Simulation Dashboard",
-  description: "Real-time 4G/5G Network Simulation and Performance Monitoring",
+  title: "NS3 Dashboard",
+  description: "Real-time 4G/5G network simulation dashboard",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className="bg-[#020817] antialiased">{children}</body>
     </html>
   );
 }

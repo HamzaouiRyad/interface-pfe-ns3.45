@@ -1,8 +1,8 @@
-// ── Simulation status & technology ───────────────────────────────────────────
+// Simulation status & technology
 export type SimStatus = 'idle' | 'running' | 'stopped'
 export type SimTech   = '4g' | '5g'
 
-// ── Server-Sent Events ───────────────────────────────────────────────────────
+// Server-Sent Events
 export interface StatsEvent {
   type: 'stats'
   time: number
@@ -43,11 +43,11 @@ export interface StatusEvent {
 
 export type NS3Event = StatsEvent | LinkEvent | NodePosEvent | LogEvent | StatusEvent
 
-// ── Chart data ───────────────────────────────────────────────────────────────
+// Chart data
 // Each point: { time: 0.1, 'n1': 15.2, 'n2': 22.1, ... }
 export type ChartPoint = { time: number } & Record<string, number | undefined>
 
-// ── Topology ─────────────────────────────────────────────────────────────────
+// Topology
 export interface NodeState {
   id: number
   x: number
@@ -64,7 +64,7 @@ export interface LinkState {
   delay: string
 }
 
-// ── KPI snapshot ─────────────────────────────────────────────────────────────
+// KPI snapshot
 export interface KPIData {
   avgThroughput: number
   peakThroughput: number
@@ -73,7 +73,7 @@ export interface KPIData {
   avgLoss: number
 }
 
-// ── Client-side dashboard state ───────────────────────────────────────────────
+// Client-side dashboard state
 export interface DashboardState {
   status: SimStatus
   tech  : SimTech
